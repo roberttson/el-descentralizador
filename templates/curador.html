@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Curador · El Descentralizador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --papel: #0a0a0a;
+        --papel-alzado: #141414;
+        --tinta: #f5f5f5;
+        --tinta-suave: #bdbdbd;
+        --tinta-tenue: #828282;
+        --filete: #2b2b2b;
+        --filete-fuerte: #4d4d4d;
+        --rojo: #e8492f;
+        --amarillo: #f7c948;
+        --muni: #7cb8e8;
+        --verde: #6fc28a;            /* aprobado */
+        --naranja: #e89a3a;          /* arreglar */
+        --gris: #6b6b6b;             /* descartado */
+        --serif: "Fraunces", Georgia, serif;
+        --texto-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+        --sans: "Archivo", "Segoe UI", sans-serif;
+    }
+    html { scrollbar-color: var(--filete-fuerte) var(--papel); }
+    body { font-family: var(--sans); background: var(--papel); color: var(--tinta);
+           min-height: 100vh; }
+    ::selection { background: var(--amarillo); color: #000; }
+    a { color: inherit; }
+
+    .cinta { display: flex; justify-content: space-between; align-items: center;
+             gap: 12px; flex-wrap: wrap; max-width: 1100px; margin: 0 auto;
+             padding: 10px 28px; font-size: 0.72rem; letter-spacing: 0.14em;
+             text-transform: uppercase; color: var(--tinta-suave);
+             border-bottom: 1px solid var(--filete); }
+    .cinta a { color: var(--tinta-suave); text-decoration: none;
+               border-bottom: 1px solid transparent; padding-bottom: 1px; }
+    .cinta a:hover { color: var(--rojo); border-bottom-color: var(--rojo); }
+
+    .masthead { text-align: center; padding: 26px 20px 16px; }
+    .masthead .kicker-tipo { font-size: 0.72rem; letter-spacing: 0.28em;
+                             text-transform: uppercase; color: var(--rojo);
+                             font-weight: 700; }
+    .masthead h1 { font: 900 clamp(2rem, 5.5vw, 3.4rem)/1 var(--serif);
+                   letter-spacing: -0.015em; color: var(--amarillo); margin-top: 6px; }
+    .doble-filete { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+    .doble-filete::before { content: ""; display: block;
+        border-top: 3px solid var(--filete-fuerte);
+        border-bottom: 1px solid var(--filete-fuerte); height: 5px; }
+
+    /* Resumen de progreso */
+    .resumen { display: flex; flex-wrap: wrap; gap: 14px 26px;
+               max-width: 1100px; margin: 0 auto; padding: 16px 28px;
+               font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase;
+               color: var(--tinta-tenue); border-bottom: 1px solid var(--filete); }
+    .resumen b { color: var(--tinta); font-weight: 700; }
+    .resumen .es-pendiente b { color: var(--amarillo); }
+    .resumen .es-aprobado b { color: var(--verde); }
+    .resumen .es-arreglar b { color: var(--naranja); }
+    .resumen .es-descartado b { color: var(--gris); }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 26px 28px 60px; }
+
+    /* Tarjeta de la fuente en revisión */
+    .fuente { background: var(--papel-alzado); border: 1px solid var(--filete);
+              padding: 24px 28px 22px; margin-bottom: 22px; }
+    .fuente-cab { display: flex; justify-content: space-between; align-items: baseline;
+                  gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+    .fuente-posicion { font: 600 0.72rem var(--sans); letter-spacing: 0.16em;
+                       text-transform: uppercase; color: var(--tinta-tenue); }
+    .fuente-titulo { font: 700 1.8rem/1.15 var(--serif); color: var(--amarillo);
+                     letter-spacing: -0.01em; }
+    .fuente-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px;
+                   font-size: 0.78rem; color: var(--tinta-suave); }
+    .fuente-meta .region { color: var(--rojo); font-weight: 700;
+                           letter-spacing: 0.1em; text-transform: uppercase; }
+    .fuente-meta a { color: var(--tinta-suave); text-decoration: underline var(--filete-fuerte);
+                     text-underline-offset: 3px; }
+    .fuente-meta a:hover { color: var(--rojo); }
+    .estado-pill { display: inline-block; font: 700 0.66rem var(--sans);
+                   letter-spacing: 0.18em; text-transform: uppercase;
+                   padding: 4px 12px; border: 1px solid currentColor; }
+    .estado-pendiente { color: var(--amarillo); }
+    .estado-aprobado  { color: var(--verde); }
+    .estado-arreglar  { color: var(--naranja); }
+    .estado-descartado{ color: var(--gris); }
+    .badge-sin-rss { display: inline-block; font: 700 0.62rem var(--sans);
+                     letter-spacing: 0.16em; text-transform: uppercase;
+                     padding: 3px 8px; background: var(--filete);
+                     color: var(--tinta-tenue); margin-left: 8px; }
+    .sin-feed { background: var(--papel); border: 1px dashed var(--filete-fuerte);
+                padding: 22px 24px; text-align: center;
+                font: italic 0.95rem var(--serif); color: var(--tinta-tenue); }
+    .sin-feed b { color: var(--tinta-suave); font-style: normal; }
+
+    /* Botonera de clasificación */
+    .acciones { display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+                gap: 12px; margin: 22px 0 6px; }
+    .accion { background: none; border: 1px solid var(--filete-fuerte);
+              color: var(--tinta); padding: 14px 12px; cursor: pointer;
+              font: 700 0.78rem var(--sans); letter-spacing: 0.16em;
+              text-transform: uppercase; transition: all 0.12s; }
+    .accion:hover:not(:disabled) { transform: translateY(-1px); }
+    .accion:disabled { opacity: 0.4; cursor: wait; }
+    .accion .tecla { display: block; font-size: 0.6rem; color: var(--tinta-tenue);
+                     letter-spacing: 0.2em; margin-top: 4px; }
+    .accion-aprobar:hover  { border-color: var(--verde); color: var(--verde); }
+    .accion-arreglar:hover { border-color: var(--naranja); color: var(--naranja); }
+    .accion-descartar:hover{ border-color: var(--gris); color: var(--tinta-suave); }
+    .accion-saltar:hover   { border-color: var(--rojo); color: var(--rojo); }
+
+    .comentario { width: 100%; background: var(--papel); border: 1px solid var(--filete);
+                  color: var(--tinta); padding: 8px 10px; font: 0.85rem var(--sans);
+                  margin-top: 14px; resize: vertical; min-height: 50px; }
+    .comentario:focus { outline: none; border-color: var(--filete-fuerte); }
+    .comentario-label { display: block; font-size: 0.64rem; color: var(--tinta-tenue);
+                        text-transform: uppercase; letter-spacing: 0.18em;
+                        margin-top: 14px; font-weight: 600; }
+
+    /* Muestra de noticias */
+    .muestra-titulo { font: 700 0.74rem var(--sans); letter-spacing: 0.2em;
+                      text-transform: uppercase; color: var(--rojo);
+                      margin-bottom: 14px; padding-bottom: 8px;
+                      border-bottom: 1px solid var(--filete); }
+    .entradas { display: grid; gap: 14px; }
+    .entrada { display: grid; grid-template-columns: 140px 1fr; gap: 14px;
+               padding: 12px; background: var(--papel); border: 1px solid var(--filete); }
+    .entrada-img { width: 140px; height: 100px; object-fit: cover;
+                   background: var(--papel-alzado); border: 1px solid var(--filete); }
+    .entrada-cuerpo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .entrada-titulo { font: 600 1rem/1.3 var(--serif); color: var(--amarillo); }
+    .entrada-resumen { font: 0.82rem/1.5 var(--texto-serif); color: var(--tinta-suave);
+                       display: -webkit-box; -webkit-line-clamp: 3;
+                       -webkit-box-orient: vertical; overflow: hidden; }
+    .entrada-pie { font-size: 0.68rem; color: var(--tinta-tenue);
+                   letter-spacing: 0.1em; text-transform: uppercase; margin-top: auto; }
+    .entrada-pie a { color: var(--tinta-tenue); text-decoration: underline var(--filete-fuerte); }
+    .entrada-pie a:hover { color: var(--rojo); }
+    @media (max-width: 600px) {
+        .entrada { grid-template-columns: 1fr; }
+        .entrada-img { width: 100%; height: 160px; }
+    }
+
+    .cargando { text-align: center; padding: 60px 0;
+                font: italic 1rem var(--serif); color: var(--tinta-tenue);
+                animation: latir 1.4s ease-in-out infinite; }
+    @keyframes latir { 50% { opacity: 0.35; } }
+    .vacio { text-align: center; padding: 80px 0;
+             font: italic 1.1rem var(--serif); color: var(--tinta-tenue); }
+    .error { background: var(--papel-alzado); border-left: 3px solid var(--rojo);
+             padding: 14px 18px; font-size: 0.9rem; color: var(--tinta-suave);
+             margin: 14px 0; }
+
+    /* Lista compacta de todas las fuentes (sidebar inferior) */
+    .lista-todas { margin-top: 34px; padding-top: 22px;
+                   border-top: 1px solid var(--filete); }
+    .lista-todas h3 { font: 700 0.76rem var(--sans); letter-spacing: 0.2em;
+                      text-transform: uppercase; color: var(--tinta-suave);
+                      margin-bottom: 14px; }
+    .lista-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+                  gap: 6px; }
+    .lista-item { display: flex; justify-content: space-between; align-items: center;
+                  gap: 8px; padding: 6px 10px; background: var(--papel-alzado);
+                  border: 1px solid var(--filete); font-size: 0.82rem;
+                  cursor: pointer; transition: border-color 0.12s; }
+    .lista-item:hover { border-color: var(--filete-fuerte); }
+    .lista-item.actual { border-color: var(--rojo); }
+    .lista-item .nombre { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lista-item .marca { font-size: 0.62rem; letter-spacing: 0.16em;
+                         text-transform: uppercase; font-weight: 700; }
+    .marca-pendiente { color: var(--amarillo); }
+    .marca-aprobado  { color: var(--verde); }
+    .marca-arreglar  { color: var(--naranja); }
+    .marca-descartado{ color: var(--gris); }
+</style>
+</head>
+<body>
+
+<div class="cinta">
+    <a href="/">↩ Volver al diario</a>
+    <div>
+        <a href="/curador/medios">Medios</a> ·
+        <a href="/curador/municipalidades">Municipalidades</a>
+    </div>
+</div>
+
+<header class="masthead">
+    <div class="kicker-tipo">Mesa de curación · {{ tipo }}</div>
+    <h1>El Curador</h1>
+</header>
+<div class="doble-filete"></div>
+
+<div class="resumen" id="resumen"></div>
+
+<main>
+    <section id="contenedor"></section>
+    <div class="lista-todas" id="lista-todas" hidden>
+        <h3>Todas las fuentes</h3>
+        <div class="lista-grid" id="lista-grid"></div>
+    </div>
+</main>
+
+<script>
+const TIPO = {{ tipo|tojson }};
+const $ = id => document.getElementById(id);
+const ESTADOS = ["aprobado", "arreglar", "descartado"];
+let fuentes = [], idx = 0, cargando = false;
+
+const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+function fmtFecha(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    if (isNaN(d)) return "—";
+    return `${d.getDate()} ${MESES[d.getMonth()]} ${d.getFullYear()}`;
+}
+function escapar(s) {
+    const div = document.createElement("div");
+    div.textContent = s || "";
+    return div.innerHTML;
+}
+
+async function cargarFuentes() {
+    const r = await fetch(`/api/curador/${TIPO}/fuentes`);
+    const data = await r.json();
+    fuentes = data.fuentes;
+    pintarResumen();
+    pintarLista();
+    // Posicionarse en la primera pendiente
+    idx = fuentes.findIndex(f => f.estado === "pendiente");
+    if (idx < 0) idx = 0;
+    pintarFuenteActual();
+}
+
+function pintarResumen() {
+    const c = { pendiente: 0, aprobado: 0, arreglar: 0, descartado: 0 };
+    for (const f of fuentes) c[f.estado] = (c[f.estado] || 0) + 1;
+    $("resumen").innerHTML = `
+        <span>Total: <b>${fuentes.length}</b></span>
+        <span class="es-pendiente">Pendientes: <b>${c.pendiente}</b></span>
+        <span class="es-aprobado">Aprobados: <b>${c.aprobado}</b></span>
+        <span class="es-arreglar">Arreglar: <b>${c.arreglar}</b></span>
+        <span class="es-descartado">Descartados: <b>${c.descartado}</b></span>
+    `;
+}
+
+function pintarLista() {
+    const g = $("lista-grid");
+    g.innerHTML = fuentes.map((f, i) =>
+        `<div class="lista-item ${i === idx ? "actual" : ""}" data-i="${i}">
+            <span class="nombre">${escapar(f.nombre.replace(/^Municipalidad de /, ""))}</span>
+            <span class="marca marca-${f.estado}">${f.estado[0].toUpperCase()}</span>
+        </div>`
+    ).join("");
+    $("lista-todas").hidden = false;
+}
+
+function _meta(f) {
+    const partes = [`<span class="region">${escapar(f.region)}</span>`];
+    if (f.url) partes.push(`<a href="${escapar(f.url)}" target="_blank" rel="noopener">Sitio ↗</a>`);
+    if (f.feed_url) partes.push(`<a href="${escapar(f.feed_url)}" target="_blank" rel="noopener">Feed RSS ↗</a>`);
+    return partes.join("");
+}
+
+async function pintarFuenteActual() {
+    if (!fuentes.length) {
+        $("contenedor").innerHTML = '<div class="vacio">No hay fuentes de este tipo en el catastro.</div>';
+        return;
+    }
+    const f = fuentes[idx];
+    const sinRss = !f.tiene_rss || !f.feed_url;
+    $("contenedor").innerHTML = `
+        <article class="fuente">
+            <div class="fuente-cab">
+                <div>
+                    <div class="fuente-posicion">${idx + 1} de ${fuentes.length}</div>
+                    <h2 class="fuente-titulo">${escapar(f.nombre)}${sinRss ? '<span class="badge-sin-rss">Sin RSS</span>' : ''}</h2>
+                    <div class="fuente-meta">${_meta(f)}</div>
+                </div>
+                <span class="estado-pill estado-${f.estado}">${f.estado}</span>
+            </div>
+
+            <div class="acciones">
+                <button class="accion accion-aprobar"  data-estado="aprobado">✓ Aprobar<span class="tecla">tecla 1</span></button>
+                <button class="accion accion-arreglar" data-estado="arreglar">⚙ Arreglar<span class="tecla">tecla 2</span></button>
+                <button class="accion accion-descartar" data-estado="descartado">✗ Descartar<span class="tecla">tecla 3</span></button>
+                <button class="accion accion-saltar"  data-accion="saltar">↷ Saltar<span class="tecla">tecla espacio</span></button>
+            </div>
+            <label class="comentario-label" for="comentario">Comentario (opcional)</label>
+            <textarea class="comentario" id="comentario" placeholder="Notas: por qué descartar, qué arreglar (buscar feed, scraping HTML, etc.)">${escapar(f.comentario || "")}</textarea>
+
+            <div class="muestra-titulo" style="margin-top: 28px;">${sinRss ? "Estado del sitio" : "Últimas 10 noticias del feed"}</div>
+            <div id="muestra">${sinRss
+                ? `<div class="sin-feed">
+                    <b>Esta fuente no tiene feed RSS detectado.</b><br>
+                    ${f.url
+                        ? `Revisá el sitio: <a href="${escapar(f.url)}" target="_blank" rel="noopener">${escapar(f.url)} ↗</a>`
+                        : "No hay sitio web registrado tampoco."}<br>
+                    Marcá <b>Arreglar</b> si vale la pena buscar un feed o scrapearla, o <b>Descartar</b> si no.
+                  </div>`
+                : '<div class="cargando">Descargando feed…</div>'
+            }</div>
+        </article>
+    `;
+    bindAcciones();
+    pintarLista();
+    if (!sinRss) cargarMuestra(f);
+}
+
+async function cargarMuestra(f) {
+    try {
+        const r = await fetch(`/api/curador/muestra?feed_url=${encodeURIComponent(f.feed_url)}`);
+        if (!r.ok) {
+            const e = await r.json().catch(() => ({}));
+            $("muestra").innerHTML = `<div class="error">No se pudo descargar el feed: ${escapar(e.error || r.status)}</div>`;
+            return;
+        }
+        const data = await r.json();
+        if (!data.entradas || !data.entradas.length) {
+            $("muestra").innerHTML = '<div class="error">El feed respondió pero no tiene entradas.</div>';
+            return;
+        }
+        $("muestra").innerHTML = '<div class="entradas">' + data.entradas.map(e => {
+            const img = e.imagen
+                ? `<img class="entrada-img" src="${escapar(e.imagen)}" alt="" onerror="this.remove()">`
+                : `<div class="entrada-img"></div>`;
+            return `<div class="entrada">
+                ${img}
+                <div class="entrada-cuerpo">
+                    <div class="entrada-titulo">${escapar(e.titulo)}</div>
+                    <div class="entrada-resumen">${escapar(e.resumen)}</div>
+                    <div class="entrada-pie">${fmtFecha(e.fecha)} · <a href="${escapar(e.url)}" target="_blank" rel="noopener">abrir ↗</a></div>
+                </div>
+            </div>`;
+        }).join("") + '</div>';
+    } catch (err) {
+        $("muestra").innerHTML = `<div class="error">Error: ${escapar(err.message)}</div>`;
+    }
+}
+
+function bindAcciones() {
+    document.querySelectorAll(".accion").forEach(btn => {
+        btn.addEventListener("click", async () => {
+            const estado = btn.dataset.estado;
+            if (estado) await clasificar(estado);
+            else if (btn.dataset.accion === "saltar") avanzar();
+        });
+    });
+}
+
+async function clasificar(estado) {
+    if (cargando) return;
+    cargando = true;
+    const f = fuentes[idx];
+    const comentario = $("comentario")?.value || "";
+    document.querySelectorAll(".accion").forEach(b => b.disabled = true);
+    try {
+        const r = await fetch("/api/curador/clasificar", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nombre: f.nombre, estado, comentario }),
+        });
+        if (r.ok) {
+            f.estado = estado;
+            f.comentario = comentario;
+            pintarResumen();
+            avanzar();
+        }
+    } finally {
+        cargando = false;
+    }
+}
+
+function avanzar() {
+    // Buscar la siguiente fuente pendiente desde idx+1
+    let n = idx + 1;
+    while (n < fuentes.length && fuentes[n].estado !== "pendiente") n++;
+    if (n >= fuentes.length) {
+        // Si no hay más pendientes, ir a la siguiente del catastro
+        idx = (idx + 1) % fuentes.length;
+    } else {
+        idx = n;
+    }
+    pintarFuenteActual();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Atajos de teclado
+document.addEventListener("keydown", e => {
+    if (e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
+    if (e.key === "1") clasificar("aprobado");
+    else if (e.key === "2") clasificar("arreglar");
+    else if (e.key === "3") clasificar("descartado");
+    else if (e.key === " ") { e.preventDefault(); avanzar(); }
+});
+
+// Clic en cualquier item de la lista inferior salta a esa fuente
+$("lista-grid").addEventListener("click", e => {
+    const item = e.target.closest(".lista-item");
+    if (!item) return;
+    idx = +item.dataset.i;
+    pintarFuenteActual();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+cargarFuentes();
+</script>
+</body>
+</html>

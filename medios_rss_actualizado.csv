@@ -1,0 +1,204 @@
+nombre,region,url,sitio_vivo,tiene_rss,feed_url
+Antofacity,Antofagasta,https://www.antofacity.com,True,True,https://www.antofacity.com/feed
+El Diario de Antofagasta,Antofagasta,https://www.diarioantofagasta.cl,True,True,https://www.diarioantofagasta.cl/feed
+En La Linea,Antofagasta,https://www.enlalinea.cl,True,True,https://www.enlalinea.cl/feed
+Región 2,Antofagasta,https://www.region2.cl,True,True,https://www.region2.cl/feed
+Timeline,Antofagasta,https://www.timeline.cl,True,True,https://www.timeline.cl/feed
+Clave 9,Araucanía,https://www.clave9.cl,True,True,https://www.clave9.cl/feed
+Diario El Cautín,Araucanía,https://www.diarioelcautin.cl,True,True,https://www.diarioelcautin.cl/feed
+El Periodico,Araucanía,https://www.elperiodico.cl,True,True,https://www.elperiodico.cl/feed
+Noticias del Sur,Araucanía,https://www.noticiasdelsur.cl,True,True,https://www.noticiasdelsur.cl/feed
+Temuco Diario,Araucanía,https://www.temucodiario.cl,True,True,https://www.temucodiario.cl/feed
+Tiempo 21,Araucanía,https://www.tiempo21.cl,True,True,https://www.tiempo21.cl/feed
+Arica City,Arica y Parinacota,https://www.aricacity.cl,True,True,https://www.aricacity.cl/feed
+Arica Mía,Arica y Parinacota,https://www.aricamia.cl,False,False,
+Arica al Día,Arica y Parinacota,https://www.aricaldia.cl,True,True,https://www.aricaldia.cl/feed/
+Deportes Arica,Arica y Parinacota,https://deportesarica.cl,True,True,https://deportesarica.cl/feed
+Diario El Morro,Arica y Parinacota,https://elmorrodearica.cl,True,True,https://elmorrodearica.cl/feed/
+Radio Siente,Arica y Parinacota,https://www.radiosiente.com,True,True,https://www.radiosiente.com/feed
+Atacama Noticias,Atacama,https://www.atacamanoticias.cl,True,True,https://www.atacamanoticias.cl/feed/
+Chañarcillo,Atacama,https://www.chanarcillo.cl,True,True,https://www.chanarcillo.cl/feed/
+El Noticiero del Huasco,Atacama,https://elnoticierodelhuasco.cl,True,True,https://elnoticierodelhuasco.cl/feed/
+El Tierramarillano,Atacama,https://www.tierramarillano.cl,True,True,https://tierramarillano.cl/feed/
+Enfoque Digital,Atacama,https://www.enfoquedigital.cl,True,True,https://www.enfoquedigital.cl/feed
+Vallenar Digital,Atacama,https://www.vallenardigital.cl,True,True,https://www.vallenardigital.cl/feed
+Canal Sur Patagonia,Aysén,https://www.canalsurpatagonia.cl,True,True,https://www.canalsurpatagonia.cl/feed/
+Radio Genial,Aysén,https://radiogenial.cl,True,True,https://radiogenial.cl/feed/
+Radio Las Nieves,Aysén,https://www.rln.cl,True,True,https://www.rln.cl/feed/
+Radio Patagonia,Aysén,http://www.radiopatagonia.cl,True,False,
+Radio Santa María,Aysén,https://www.radiosantamaria.cl,True,True,https://www.radiosantamaria.cl/feed/
+Diario Concepción,Biobío,https://www.diarioconcepcion.cl,True,True,https://www.diarioconcepcion.cl/rss.xml
+TVU,Biobío,https://www.tvu.cl,True,True,https://www.tvu.cl/rss.xml
+El Andacollino,Coquimbo,https://www.elandacollino.cl,True,True,https://www.elandacollino.cl/feed
+El Ovallino,Coquimbo,https://www.elovallino.cl,True,True,https://www.elovallino.cl/feed/
+Elqui Global,Coquimbo,https://www.elquiglobal.cl,True,True,https://www.elquiglobal.cl/feed
+La Serena Online,Coquimbo,https://laserenaonline.cl,True,True,https://laserenaonline.cl/feed/
+Salamanca Chile,Coquimbo,https://salamancachile.cl,True,True,https://salamancachile.cl/rss
+Serena y Coquimbo,Coquimbo,https://serenaycoquimbo.cl,True,True,https://serenaycoquimbo.cl/feed/
+Aqua,Los Lagos,https://www.aqua.cl,True,True,https://www.aqua.cl/feed
+Chiloé Rural,Los Lagos,https://www.chiloeRural.cl,True,True,https://www.chiloeRural.cl/feed
+Chiloé al Día,Los Lagos,https://www.diariochiloe.cl,True,False,
+Diario El Huemul,Los Lagos,https://elhuemul.cl,True,True,https://elhuemul.cl/feed/
+Diario Los Lagos,Los Lagos,https://diarioloslagos.cl,True,True,https://diarioloslagos.cl/feed/
+Diario Puerto Varas,Los Lagos,https://diariopuertovaras.cl,True,True,https://diariopuertovaras.cl/feed/
+El Calbucano,Los Lagos,https://www.elcalbucano.cl,True,True,https://www.elcalbucano.cl/feed/
+El Insular,Los Lagos,https://www.elinsular.cl,True,True,https://elinsular.cl/feed/
+Queilen,Los Lagos,https://www.queilen.cl,True,True,https://www.queilen.cl/blog-feed.xml
+Vértice TV,Los Lagos,https://verticetv.cl,True,True,https://verticetv.cl/feed/
+El Provincial,Los Ríos,https://www.elprovincial.cl,True,True,https://www.elprovincial.cl/feed
+Los Ríos al Día,Los Ríos,https://www.losriosaldia.cl,True,True,https://www.losriosaldia.cl/feed
+Río en Línea,Los Ríos,https://www.rioenlinea.cl,True,True,https://www.rioenlinea.cl/feed/
+El Magallánico,Magallanes,https://elmagallanico.com,True,True,https://elmagallanico.com/feed/
+El Pingüino,Magallanes,https://elpinguino.com,True,True,https://elpinguino.com/feed/
+ITV Patagonia,Magallanes,https://www.itvpatagonia.com,True,True,https://www.itvpatagonia.com/feed/
+La Prensa Austral,Magallanes,https://laprensaaustral.cl,True,True,https://laprensaaustral.cl/feed/
+Cauquenes Net,Maule,https://www.cauquenesnet.cl,True,True,https://www.cauquenesnet.cl/feed
+Diario Talca,Maule,https://diariotalca.cl,True,True,https://diariotalca.cl/feed/
+El Centro,Maule,https://www.diarioelcentro.cl,True,True,https://www.diarioelcentro.cl/feed
+El Heraldo de Linares,Maule,https://www.diarioelheraldo.cl,True,True,https://www.diarioelheraldo.cl/feed.php
+El Urbano Rural,O'Higgins,https://www.elurbanorural.cl,True,True,https://www.elurbanorural.cl/feed
+Pichilemu News,O'Higgins,https://www.pichilemunews.cl,True,True,https://www.pichilemunews.cl/feed
+VI.cl,O'Higgins,https://www.vi.cl,True,True,https://www.vi.cl/feed
+Diario El Nortino,Tarapacá,https://www.diarioelnortino.cl,True,True,https://www.diarioelnortino.cl/feed
+La Mega FM,Tarapacá,https://lamegafm.cl,True,True,https://lamegafm.cl/feed
+Diario Aconcagua,Valparaíso,https://www.diarioaconcagua.cl,True,True,https://www.diarioaconcagua.cl/blog-feed.xml
+Diario El Porteño,Valparaíso,https://elporteno.cl,True,True,https://elporteno.cl/feed/
+Diario La Quinta,Valparaíso,https://diariolaquinta.cl,True,True,https://diariolaquinta.cl/feed/
+El Aconcagua,Valparaíso,https://www.elaconcagua.cl,True,True,https://www.elaconcagua.cl/feed/
+El Observador,Valparaíso,https://www.observador.cl,True,True,https://www.observador.cl/feed/
+El Trabajo,Valparaíso,https://www.eltrabajo.cl,True,True,https://eltrabajo.cl/web/feed/
+Mi San Felipe,Valparaíso,https://www.misanfelipe.cl,True,True,https://www.misanfelipe.cl/feed
+Pasión FM,Valparaíso,https://www.pasionfm.cl,True,True,https://montealegre.cl/feed/
+Chillán Online,Ñuble,https://www.chillanonline.cl,True,True,https://www.chillanonline.cl/V7/feed/
+Municipalidad de Cobquecura,Ñuble,https://www.cobquecura.cl,True,True,https://www.cobquecura.cl/feed
+La Discusión,Ñuble,https://ladiscusion.cl,True,True,https://ladiscusion.cl/feed/
+La Fontana,Ñuble,https://lafontana.cl,True,True,https://lafontana.cl/feed/
+San Carlos Online,Ñuble,https://www.sancarlosonline.cl,True,True,https://www.sancarlosonline.cl/rss.xml
+Ñuble Digital,Ñuble,https://nubledigital.cl,True,True,https://nubledigital.cl/feed/
+Municipalidad de Mejillones,Antofagasta,https://www.mejillones.cl,True,True,https://www.mejillones.cl/feed/
+Municipalidad de Ollagüe,Antofagasta,https://municipalidaddeollague.cl,True,True,https://municipalidaddeollague.cl/feed/
+Municipalidad de Tocopilla,Antofagasta,https://imtocopilla.cl,True,True,https://imtocopilla.cl/feed/
+Municipalidad de Cunco,Araucanía,https://www.municunco.cl,True,True,https://www.municunco.cl/noticias/feed/
+Municipalidad de Curarrehue,Araucanía,https://curarrehue.cl,True,True,https://curarrehue.cl/on/feed/
+Municipalidad de Gorbea,Araucanía,https://home.municipalidadgorbea.cl,True,True,https://home.municipalidadgorbea.cl/feed
+Municipalidad de Lautaro,Araucanía,https://sitio.munilautaro.cl,True,True,https://sitio.munilautaro.cl/feed/
+Municipalidad de Melipeuco,Araucanía,https://municipalidadmelipeuco.cl,True,True,https://municipalidadmelipeuco.cl/feed/
+Municipalidad de Perquenco,Araucanía,https://www.perquenco.cl,True,True,https://www.perquenco.cl/feed/
+Municipalidad de Pucón,Araucanía,https://municipalidadpucon.cl,True,True,https://municipalidadpucon.cl/?feed=rss2
+Municipalidad de Renaico,Araucanía,https://municipalidadrenaico.cl,True,True,https://municipalidadrenaico.cl/feed/
+Municipalidad de Saavedra,Araucanía,https://munisaavedra.cl,True,True,https://munisaavedra.cl/feed/
+Municipalidad de Temuco,Araucanía,https://www.temuco.cl,True,True,https://www.temuco.cl/feed/
+Municipalidad de Villarrica,Araucanía,https://www.munivillarrica.cl,True,True,https://www.munivillarrica.cl/feed/
+Municipalidad de Freirina,Atacama,https://imfreirina.cl,True,True,https://imfreirina.cl/feed/
+Municipalidad de Vallenar,Atacama,https://www.imvallenar.gob.cl,True,True,https://www.imvallenar.gob.cl/feed/
+Municipalidad de Aysén,Aysén,https://muniaysen.gob.cl,True,True,https://muniaysen.gob.cl/feed/
+Municipalidad de Guaitecas,Aysén,https://muniguaitecas.cl,True,True,https://muniguaitecas.cl/feed/
+Municipalidad de O'Higgins,Aysén,https://www.municipalidadohiggins.cl,True,True,https://www.municipalidadohiggins.cl/feed/
+Municipalidad de Río Ibáñez,Aysén,https://rioibanez.cl,True,True,https://rioibanez.cl/feed/
+Municipalidad de Alto Biobío,Biobío,https://munialtobiobio.cl,True,True,https://munialtobiobio.cl/feed/
+Municipalidad de Cañete,Biobío,https://municanete.cl,True,True,https://municanete.cl/v2/feed/
+Municipalidad de Chiguayante,Biobío,https://chiguayante.cl,True,True,https://chiguayante.cl/Chgte/?feed=rss2
+Municipalidad de Concepción,Biobío,https://concepcion.cl,True,True,https://concepcion.cl/feed/
+Municipalidad de Coronel,Biobío,https://www.coronel.cl,True,True,https://www.coronel.cl/feed/
+Municipalidad de Laja,Biobío,https://munilaja.cl,True,True,https://munilaja.cl/w/feed/
+Municipalidad de Los Álamos,Biobío,https://munilosalamos.gob.cl,True,True,https://munilosalamos.gob.cl/feed/
+Municipalidad de Lota,Biobío,https://lota.cl,True,True,https://lota.cl/feed/
+Municipalidad de Negrete,Biobío,https://www.muninegrete.cl,True,True,https://www.muninegrete.cl/feed/
+Municipalidad de Penco,Biobío,https://penco.cl,True,True,https://penco.cl/feed/
+Municipalidad de Quilaco,Biobío,https://municipalidadquilaco.cl,True,True,https://municipalidadquilaco.cl/w/?feed=rss2
+Municipalidad de Quilleco,Biobío,https://municipalidadquilleco.cl,True,True,https://municipalidadquilleco.cl/feed/
+Municipalidad de San Pedro de la Paz,Biobío,https://sanpedrodelapaz.cl,True,True,https://sanpedrodelapaz.cl/feed/
+Municipalidad de San Rosendo,Biobío,https://municipalidadsanrosendo.cl,True,True,https://municipalidadsanrosendo.cl/feed/
+Municipalidad de Santa Bárbara,Biobío,https://www.santabarbara.cl,True,True,https://www.santabarbara.cl/feed/
+Municipalidad de Santa Juana,Biobío,https://new.santajuana.cl,True,True,https://new.santajuana.cl/feed/
+Municipalidad de Yumbel,Biobío,https://yumbel.cl,True,True,https://yumbel.cl/feed/
+Municipalidad de Illapel,Coquimbo,https://municipalidadillapel.cl,True,True,https://municipalidadillapel.cl/feed/
+Municipalidad de Punitaqui,Coquimbo,https://www.munipunitaqui.cl,True,True,https://www.munipunitaqui.cl/noticias/feed/
+Municipalidad de Río Hurtado,Coquimbo,https://riohurtado.cl,True,True,https://riohurtado.cl/?feed=rss2
+Municipalidad de Vicuña,Coquimbo,https://munivicuna.cl,True,True,https://munivicuna.cl/feed/
+Municipalidad de Calbuco,Los Lagos,https://www.municipalidadcalbuco.cl,True,True,https://www.municipalidadcalbuco.cl/?feed=rss2
+Municipalidad de Castro,Los Lagos,https://www.municipalidadcastro.cl,True,True,https://www.municipalidadcastro.cl/feed/
+Municipalidad de Chonchi,Los Lagos,https://municipalidadchonchi.cl,True,True,https://municipalidadchonchi.cl/web/feed/
+Municipalidad de Dalcahue,Los Lagos,https://www.munidalcahue.cl,True,True,https://www.munidalcahue.cl/portal/feed/
+Municipalidad de Frutillar,Los Lagos,https://munifrutillar.cl,True,True,https://munifrutillar.cl/feed/
+Municipalidad de Futaleufú,Los Lagos,https://www.futaleufu.cl,True,True,https://www.futaleufu.cl/feed/
+Municipalidad de Hualaihué,Los Lagos,https://municipalidadhualaihue.cl,True,True,https://municipalidadhualaihue.cl/feed/
+Municipalidad de Maullín,Los Lagos,https://munimaullin.cl,True,True,https://munimaullin.cl/feed/
+Municipalidad de Palena,Los Lagos,https://municipalidadpalena.cl,True,True,https://municipalidadpalena.cl/feed/
+Municipalidad de Puerto Montt,Los Lagos,https://www.puertomontt.cl,True,True,https://www.puertomontt.cl/feed/
+Municipalidad de Puqueldón,Los Lagos,https://munipuqueldon.cl,True,True,https://munipuqueldon.cl/feed
+Municipalidad de Quellón,Los Lagos,https://muniquellon.cl,True,True,https://muniquellon.cl/feed/
+Municipalidad de Quemchi,Los Lagos,https://www.muniquemchi.cl,True,True,https://www.muniquemchi.cl/feed/
+Municipalidad de Río Negro,Los Lagos,https://www.munirionegro.cl,True,True,https://www.munirionegro.cl/feed/
+Municipalidad de San Juan de la Costa,Los Lagos,https://sanjuandelacosta.cl,True,True,https://sanjuandelacosta.cl/feed/
+Municipalidad de San Pablo,Los Lagos,https://municipalidadsanpablo.cl,True,True,https://municipalidadsanpablo.cl/?feed=rss2
+Municipalidad de La Unión,Los Ríos,https://www.munilaunioninfo.com,True,True,https://www.munilaunioninfo.com/blog-feed.xml
+Municipalidad de Los Lagos,Los Ríos,https://muniloslagos.cl,True,True,https://muniloslagos.cl/feed/
+Municipalidad de Mariquina,Los Ríos,https://munimariquina.cl,True,True,https://munimariquina.cl/feed/
+Municipalidad de Paillaco,Los Ríos,https://www.munipaillaco.cl,True,True,https://www.munipaillaco.cl/feed/
+Municipalidad de Panguipulli,Los Ríos,https://municipalidadpanguipulli.cl,True,True,https://municipalidadpanguipulli.cl/feed
+Municipalidad de Valdivia,Los Ríos,https://munivaldivia.cl,True,True,https://munivaldivia.cl/feed/
+Municipalidad de Porvenir,Magallanes,https://www.muniporvenir.cl,True,True,https://www.muniporvenir.cl/feed/
+Municipalidad de San Gregorio,Magallanes,https://sangregorio.cl,True,True,https://sangregorio.cl/feed/
+Municipalidad de Chanco,Maule,https://chanco.cl,True,True,https://chanco.cl/feed/
+Municipalidad de Constitución,Maule,https://www.constitucion.cl,True,True,https://www.constitucion.cl/feed/
+Municipalidad de Curicó,Maule,https://www.curico.cl,True,True,https://www.curico.cl/home/feed/
+Municipalidad de Empedrado,Maule,https://empedrado.cl,True,True,https://empedrado.cl/feed/
+Municipalidad de Molina,Maule,https://web2.molina.cl,True,True,https://web2.molina.cl/feed/
+Municipalidad de Retiro,Maule,https://retiro.cl,True,True,https://retiro.cl/feed/
+Municipalidad de Sagrada Familia,Maule,https://www.sagradafamilia.cl,True,True,https://www.sagradafamilia.cl/feed/
+Municipalidad de San Clemente,Maule,https://www.sanclemente.cl,True,True,https://www.sanclemente.cl/index.php/feed/
+Municipalidad de San Rafael,Maule,https://munisanrafael.cl,True,True,https://munisanrafael.cl/?feed=rss2
+Municipalidad de Vichuquén,Maule,https://www.munivichuquen.cl,True,True,https://www.munivichuquen.cl/feed/
+Municipalidad de Lolol,O'Higgins,https://municipalidaddelolol.cl,True,True,https://municipalidaddelolol.cl/feed/
+Municipalidad de Malloa,O'Higgins,https://www.munimalloa.cl,True,True,https://www.munimalloa.cl/portal/feed/
+Municipalidad de Nancagua,O'Higgins,https://municipalidadnancagua.cl,True,True,https://municipalidadnancagua.cl/feed/
+Municipalidad de Pichilemu,O'Higgins,https://pichilemu.cl,True,True,https://pichilemu.cl/feed/
+Municipalidad de Quinta de Tilcoco,O'Higgins,https://www.quintadetilcoco.cl,True,True,https://www.quintadetilcoco.cl/feed/
+Municipalidad de Rancagua,O'Higgins,https://munirancagua.gob.cl,True,True,https://munirancagua.gob.cl/rss/noticias.xml
+Municipalidad de Rengo,O'Higgins,https://municipalidadrengo.cl,True,True,https://municipalidadrengo.cl/feed/
+Municipalidad de San Fernando,O'Higgins,https://municipalidadsanfernando.cl,True,True,https://municipalidadsanfernando.cl/feed/
+Municipalidad de Huara,Tarapacá,https://imhuara.cl,True,True,https://imhuara.cl/feed/
+Municipalidad de Algarrobo,Valparaíso,https://munialgarrobo.cl,True,True,https://munialgarrobo.cl/feed/
+Municipalidad de Cabildo,Valparaíso,https://municipiocabildo.cl,True,True,https://municipiocabildo.cl/feed/
+Municipalidad de Casablanca,Valparaíso,https://www.municipalidadcasablanca.cl,True,True,https://www.municipalidadcasablanca.cl/index.php?format=feed&type=rss
+Municipalidad de El Quisco,Valparaíso,https://www.elquisco.cl,True,True,https://www.elquisco.cl/feed/
+Municipalidad de El Tabo,Valparaíso,https://eltabo.cl,True,True,https://eltabo.cl/feed/
+Municipalidad de Limache,Valparaíso,https://limache.cl,True,True,https://limache.cl/feed/
+Municipalidad de Los Andes,Valparaíso,http://www.losandes.cl,True,True,http://www.losandes.cl/feed/
+Municipalidad de Panquehue,Valparaíso,http://www.impanquehue.cl,True,True,http://www.impanquehue.cl/?feed=rss2
+Municipalidad de Papudo,Valparaíso,https://www.munipapudo.cl,True,True,https://www.munipapudo.cl/?format=feed&type=rss
+Municipalidad de Putaendo,Valparaíso,https://www.putaendo.cl,True,True,https://www.putaendo.cl/feed/
+Municipalidad de Quintero,Valparaíso,https://www.muniquintero.cl,True,True,https://www.muniquintero.cl/index.php/feed/
+Municipalidad de Rinconada,Valparaíso,https://munirinconada.cl,True,True,https://munirinconada.cl/feed/
+Municipalidad de San Felipe,Valparaíso,https://munisanfelipe.cl,True,True,https://munisanfelipe.cl/?feed=rss2
+Municipalidad de Santo Domingo,Valparaíso,https://santodomingo.cl,True,True,https://santodomingo.cl/feed/
+Municipalidad de Valparaíso,Valparaíso,https://municipalidaddevalparaiso.cl,True,True,https://municipalidaddevalparaiso.cl/feed/
+Municipalidad de Coihueco,Ñuble,https://municoihueco.cl,True,True,https://municoihueco.cl/Inicio/feed/
+Municipalidad de El Carmen,Ñuble,http://portal.municipalidadelcarmen.cl,True,True,http://portal.municipalidadelcarmen.cl/feed/
+Municipalidad de Portezuelo,Ñuble,https://mportezuelo.cl,True,True,https://mportezuelo.cl/Inicio/feed/
+Municipalidad de Quillón,Ñuble,https://home.quillon.cl,True,True,https://home.quillon.cl/noticias/feed/
+Municipalidad de San Carlos,Ñuble,https://munisancarlos.cl,True,True,https://munisancarlos.cl/feed/
+Municipalidad de Yungay,Ñuble,https://www.yungay.cl,True,True,https://www.yungay.cl/feed/
+El Rancagüino,O'Higgins,https://www.elrancaguino.cl,True,True,https://www.elrancaguino.cl/feed/
+La Voz del Norte,Antofagasta,https://www.lavozdelnorte.cl,True,True,https://www.lavozdelnorte.cl/feed/
+El Sureño,Magallanes,https://www.elsureno.cl,True,True,https://elsureno.cl/feed/
+Mapuexpress,Araucanía,https://www.mapuexpress.org,True,True,https://www.mapuexpress.org/feed/
+Crónica Chillán,Ñuble,https://www.cronicachillan.cl,True,True,https://www.cronicachillan.cl/?feed=rss2
+Diario El Sur,Biobío,https://www.elsur.cl,True,True,https://www.elsur.cl/?feed=rss2
+Iquique al Día,Tarapacá,https://www.iquiquealdia.cl,True,True,https://iquiquealdia.cl/feed/
+Patagonia Press,Aysén,https://www.patagoniapress.cl,True,True,https://patagoniapress.cl/feed/
+Chillán Activo,Ñuble,https://www.chillanactivo.cl,True,True,https://www.chillanactivo.cl/feed/
+Radio Polar,Magallanes,https://www.radiopolar.com,True,False,
+El Divisadero,Aysén,https://www.eldivisadero.cl,True,False,
+Diario El Día,Coquimbo,https://www.diarioeldia.cl,True,False,
+Diario Regional Aysén,Aysén,https://www.diarioregionalaysen.cl,True,False,
+Diario de Valdivia,Los Ríos,https://www.diariodevaldivia.cl,True,False,
+Diario de Puerto Montt,Los Lagos,https://www.diariodepuertomontt.cl,True,False,
+Diario La Prensa,Maule,https://www.diariolaprensa.cl,True,False,
+Diario de Osorno,Los Lagos,https://www.diariodeosorno.cl,True,False,
+El Heraldo Austral,Los Lagos,https://www.elheraldoaustral.cl,True,False,
+Radio Sago,Los Lagos,https://www.radiosago.cl,True,False,
+Portal Informativo,Los Lagos,https://portalinformativo.cl,False,False,
+El Longino,Tarapacá,https://www.ellongino.cl,False,False,
+El Tipógrafo,O'Higgins,https://eltipografo.cl/inicio,True,False,

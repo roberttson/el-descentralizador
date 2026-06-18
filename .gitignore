@@ -1,0 +1,33 @@
+# Entorno virtual de Python
+venv/
+.venv/
+
+# Base de datos local (se genera al primer arranque)
+noticias.db
+noticias.db-wal
+noticias.db-shm
+
+# Caché de bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Editor y herramientas
+.claude/
+.vscode/
+.idea/
+*.swp
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Respaldos
+*.bak
+*.bak2
+*.tmp

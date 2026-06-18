@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El Descentralizador — noticias de todo Chile (menos Santiago)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    /* ── Tinta y papel (diario impreso en negativo) ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --papel: #0a0a0a;          /* negro de imprenta */
+        --papel-alzado: #141414;
+        --tinta: #f5f5f5;          /* texto blanco */
+        --tinta-suave: #bdbdbd;
+        --tinta-tenue: #828282;
+        --filete: #2b2b2b;
+        --filete-fuerte: #4d4d4d;
+        --rojo: #e8492f;           /* rojo de prensa */
+        --amarillo: #f7c948;       /* titulares */
+        --muni: #7cb8e8;           /* asuntos municipales */
+        --serif: "Fraunces", Georgia, serif;
+        --texto-serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+        --sans: "Archivo", "Segoe UI", sans-serif;
+    }
+    html { scrollbar-color: var(--filete-fuerte) var(--papel); }
+    body { font-family: var(--sans); background: var(--papel); color: var(--tinta); }
+    ::selection { background: var(--amarillo); color: #000; }
+    a { color: inherit; }
+
+    /* ── Cinta superior ── */
+    .cinta { display: flex; justify-content: space-between; align-items: center;
+             gap: 12px; flex-wrap: wrap; max-width: 1280px; margin: 0 auto;
+             padding: 10px 28px; font-size: 0.72rem; letter-spacing: 0.14em;
+             text-transform: uppercase; color: var(--tinta-suave);
+             border-bottom: 1px solid var(--filete); }
+    .cinta-acciones { display: flex; align-items: center; gap: 14px; }
+    .btn-actualizar { background: none; border: 1px solid var(--filete-fuerte);
+                      color: var(--tinta); padding: 6px 14px; cursor: pointer;
+                      font: 600 0.7rem var(--sans); letter-spacing: 0.14em;
+                      text-transform: uppercase; }
+    .btn-actualizar:hover:not(:disabled) { border-color: var(--rojo); color: var(--rojo); }
+    .btn-actualizar:disabled { opacity: 0.55; cursor: wait; }
+    .estado-ingesta { color: var(--amarillo); letter-spacing: 0.06em; }
+    .estado-ingesta.error { color: var(--rojo); }
+    .cinta-curador { color: var(--tinta-tenue); }
+    .cinta-curador a { text-decoration: none; color: var(--tinta-suave);
+                        border-bottom: 1px solid transparent; padding-bottom: 1px; }
+    .cinta-curador a:hover { color: var(--rojo); border-bottom-color: var(--rojo); }
+
+    /* ── Tira de progreso de la ingesta (se despliega solo cuando corre) ── */
+    .progreso-ingesta { max-width: 1280px; margin: 0 auto;
+                        padding: 12px 28px 14px;
+                        border-bottom: 1px solid var(--filete);
+                        animation: progreso-desplegar 0.28s ease-out; }
+    .progreso-ingesta[hidden] { display: none; }
+    @keyframes progreso-desplegar {
+        from { opacity: 0; transform: translateY(-8px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .progreso-info { display: flex; justify-content: space-between;
+                     gap: 18px; font-size: 0.7rem; letter-spacing: 0.14em;
+                     text-transform: uppercase; color: var(--tinta-suave);
+                     margin-bottom: 8px; }
+    .progreso-fase { font-weight: 600; }
+    .progreso-eta  { color: var(--tinta-tenue); }
+    .progreso-barra { height: 3px; background: var(--filete);
+                      overflow: hidden; position: relative; }
+    .progreso-relleno { height: 100%; width: 0; background: var(--rojo);
+                        transition: width 0.4s ease-out; }
+    .progreso-relleno.indeterminado { width: 30%;
+        animation: progreso-deslizar 1.4s linear infinite; }
+    @keyframes progreso-deslizar {
+        0%   { transform: translateX(-100%); }
+        100% { transform: translateX(450%); }
+    }
+
+    /* ── Cabecera de diario ── */
+    .masthead { text-align: center; padding: 34px 20px 22px; }
+    .masthead h1 { font: 900 clamp(2.4rem, 7vw, 4.6rem)/1 var(--serif);
+                   letter-spacing: -0.015em; color: var(--amarillo); }
+    .masthead h1 .articulo-el { color: var(--rojo); }
+    .lema { margin-top: 10px; font: italic 600 0.98rem var(--serif);
+            color: var(--tinta-suave); }
+    .lema b { color: var(--tinta); font-weight: 600; }
+    .lema .menos { color: var(--rojo); font-style: italic; }
+    .doble-filete { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+    .doble-filete::before { content: ""; display: block;
+        border-top: 3px solid var(--filete-fuerte);
+        border-bottom: 1px solid var(--filete-fuerte); height: 5px; }
+
+    /* ── Mesa de filtros ── */
+    .filtros { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: end;
+               max-width: 1280px; margin: 0 auto; padding: 16px 28px 18px; }
+    .campo { display: flex; flex-direction: column; gap: 5px; }
+    .campo label { font-size: 0.64rem; color: var(--tinta-tenue);
+                   text-transform: uppercase; letter-spacing: 0.18em; font-weight: 600; }
+    select, input[type=date], input[type=search] {
+        background: var(--papel); border: none; color: var(--tinta);
+        border-bottom: 1px solid var(--filete-fuerte); border-radius: 0;
+        padding: 6px 2px; font: 500 0.9rem var(--sans); min-width: 150px;
+        appearance: auto; }
+    input[type=search] { min-width: 240px; }
+    select:focus, input:focus { outline: none; border-bottom-color: var(--rojo); }
+    select option { background: var(--papel-alzado); }
+    .btn-limpiar { background: none; border: none; color: var(--tinta-tenue);
+                   padding: 6px 4px; cursor: pointer; font: 600 0.7rem var(--sans);
+                   letter-spacing: 0.14em; text-transform: uppercase;
+                   border-bottom: 1px solid transparent; }
+    .btn-limpiar:hover { color: var(--rojo); }
+    .contador { margin-left: auto; align-self: center; font-size: 0.72rem;
+                letter-spacing: 0.12em; text-transform: uppercase;
+                color: var(--tinta-tenue); }
+    .filete-bajo { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+    .filete-bajo::after { content: ""; display: block;
+                          border-top: 1px solid var(--filete); }
+
+    /* ── Portada ── */
+    main { max-width: 1280px; margin: 0 auto; padding: 26px 28px 40px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 22px; }
+    .pieza { background: var(--papel-alzado); border: 1px solid var(--filete);
+             display: flex; flex-direction: column; cursor: pointer;
+             transition: border-color 0.15s; }
+    .pieza:hover { border-color: var(--filete-fuerte); }
+    .pieza:hover .pieza-titulo { color: var(--rojo); }
+    .pieza-img { width: 100%; height: 185px; object-fit: cover; display: block;
+                 border-bottom: 1px solid var(--filete); background: #000; }
+    .pieza-cuerpo { padding: 16px 18px 14px; display: flex; flex-direction: column;
+                    gap: 9px; flex: 1; }
+    .kicker { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.16em;
+              text-transform: uppercase; color: var(--rojo); }
+    .kicker .muni { color: var(--muni); }
+    .pieza-titulo { font: 600 1.18rem/1.3 var(--serif); color: var(--amarillo);
+                    transition: color 0.15s; }
+    .pieza-bajada { font: 0.88rem/1.55 var(--texto-serif); color: var(--tinta-suave);
+                    flex: 1; display: -webkit-box; -webkit-line-clamp: 4;
+                    -webkit-box-orient: vertical; overflow: hidden; }
+    .pieza-pie { display: flex; justify-content: space-between; gap: 10px;
+                 padding-top: 10px; border-top: 1px solid var(--filete);
+                 font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .pieza-medio { color: var(--tinta-suave); font-weight: 600; }
+    .pieza-fecha { color: var(--tinta-tenue); }
+    .pieza-fuente { display: inline-block; margin-top: 10px; align-self: flex-start;
+                    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+                    color: var(--tinta-tenue); text-decoration: none; font-weight: 600; }
+    .pieza-fuente:hover { color: var(--rojo); text-decoration: underline; }
+    .tambien { font-size: 0.74rem; color: var(--tinta-tenue); line-height: 1.6; }
+    .tambien a { color: var(--muni); text-decoration: none; }
+    .tambien a:hover { text-decoration: underline; }
+
+    .acciones { text-align: center; margin: 34px 0 8px; }
+    .btn-mas { background: none; border: 1px solid var(--filete-fuerte);
+               color: var(--tinta); padding: 11px 38px; cursor: pointer;
+               font: 600 0.74rem var(--sans); letter-spacing: 0.18em;
+               text-transform: uppercase; }
+    .btn-mas:hover { border-color: var(--rojo); color: var(--rojo); }
+    .vacio, .error-carga { text-align: center; color: var(--tinta-tenue);
+                           padding: 70px 0; font: italic 1rem var(--serif); }
+    .error-carga { color: var(--rojo); }
+
+    /* ── Lector integrado ── */
+    body.leyendo { overflow: hidden; }
+    .lector { position: fixed; inset: 0; z-index: 50; overflow-y: auto;
+              background: rgba(0, 0, 0, 0.88); padding: 30px 16px;
+              scrollbar-color: var(--filete-fuerte) transparent; }
+    .lector[hidden] { display: none; }
+    .lector-pagina { position: relative; max-width: 780px; margin: 0 auto;
+                     background: #101010; border: 1px solid var(--filete-fuerte);
+                     padding: clamp(26px, 6vw, 60px); }
+    .lector-cerrar { position: absolute; top: 14px; right: 14px; background: none;
+                     border: 1px solid var(--filete-fuerte); color: var(--tinta-suave);
+                     padding: 6px 12px; cursor: pointer; font: 600 0.68rem var(--sans);
+                     letter-spacing: 0.14em; text-transform: uppercase; }
+    .lector-cerrar:hover { border-color: var(--rojo); color: var(--rojo); }
+    .lector-kicker { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
+                     text-transform: uppercase; color: var(--rojo); margin-bottom: 16px; }
+    .lector-kicker .muni { color: var(--muni); }
+    .lector-titulo { font: 700 clamp(1.7rem, 4.5vw, 2.7rem)/1.12 var(--serif);
+                     letter-spacing: -0.01em; margin-bottom: 16px;
+                     color: var(--amarillo); }
+    .lector-bajada { font: italic 400 1.16rem/1.6 var(--serif);
+                     color: var(--tinta-suave); margin-bottom: 18px; }
+    .lector-datelinea { display: flex; flex-wrap: wrap; gap: 6px 18px;
+                        font-size: 0.72rem; letter-spacing: 0.12em;
+                        text-transform: uppercase; color: var(--tinta-tenue);
+                        margin-bottom: 20px; }
+    .lector-datelinea a { color: var(--rojo); text-decoration: none; font-weight: 600; }
+    .lector-datelinea a:hover { text-decoration: underline; }
+    .lector-filete { border: none; border-top: 3px double var(--filete-fuerte);
+                     margin-bottom: 24px; }
+    .lector-hero { margin-bottom: 26px; }
+    .lector-hero img { width: 100%; display: block; border: 1px solid var(--filete); }
+
+    .lector-cuerpo { font: 1.05rem/1.8 var(--texto-serif); color: var(--tinta); }
+    .lector-cuerpo p { margin-bottom: 1.15em; }
+    .lector-cuerpo > p:first-of-type::first-letter {
+        font: 700 3.3em/0.85 var(--serif); color: var(--rojo);
+        float: left; padding: 0.04em 0.12em 0 0; }
+    .lector-cuerpo h2, .lector-cuerpo h3, .lector-cuerpo h4 {
+        font-family: var(--serif); line-height: 1.25; margin: 1.4em 0 0.6em;
+        color: var(--amarillo); }
+    .lector-cuerpo h2 { font-size: 1.45rem; }
+    .lector-cuerpo h3 { font-size: 1.25rem; }
+    .lector-cuerpo img { max-width: 100%; display: block; margin: 1.4em auto;
+                         border: 1px solid var(--filete); }
+    .lector-cuerpo figure { margin: 1.4em 0; }
+    .lector-cuerpo figcaption { font: italic 0.82rem var(--serif);
+                                color: var(--tinta-tenue); margin-top: 6px; }
+    .lector-cuerpo blockquote { border-left: 3px solid var(--rojo);
+                                padding: 2px 0 2px 18px; margin: 1.3em 0;
+                                font-style: italic; color: var(--tinta-suave); }
+    .lector-cuerpo ul, .lector-cuerpo ol { margin: 0 0 1.15em 1.4em; }
+    .lector-cuerpo a { color: var(--tinta);
+                       text-decoration: underline var(--rojo); text-underline-offset: 3px; }
+    .lector-cuerpo a:hover { color: var(--rojo); }
+
+    .lector-cargando { text-align: center; padding: 40px 0;
+                       font: italic 1rem var(--serif); color: var(--tinta-tenue);
+                       animation: latir 1.4s ease-in-out infinite; }
+    @keyframes latir { 50% { opacity: 0.35; } }
+    .lector-nota { background: var(--papel-alzado); border: 1px solid var(--filete);
+                   border-left: 3px solid var(--amarillo); padding: 14px 18px;
+                   font-size: 0.92rem; color: var(--tinta-suave); margin-bottom: 1.2em; }
+    .lector-nota a { color: var(--amarillo); }
+    .lector-tambien { margin-top: 30px; padding-top: 16px;
+                      border-top: 1px solid var(--filete); font-size: 0.8rem;
+                      color: var(--tinta-tenue); line-height: 1.7; }
+    .lector-tambien a { color: var(--muni); text-decoration: none; }
+    .lector-tambien a:hover { text-decoration: underline; }
+    .lector-cierre { text-align: center; margin-top: 34px; color: var(--filete-fuerte);
+                     font-size: 1.1rem; letter-spacing: 0.6em; }
+
+    /* ── Versión móvil ── */
+    @media (max-width: 720px) {
+        .cinta { padding: 8px 14px; font-size: 0.62rem;
+                 letter-spacing: 0.1em; gap: 8px; }
+        #fecha-hoy { flex: 1 1 100%; text-align: center;
+                     order: -1; color: var(--tinta-tenue); }
+        .cinta-acciones { width: 100%; justify-content: space-between; gap: 8px; }
+        .cinta-curador { font-size: 0.62rem; }
+        .btn-actualizar { padding: 5px 10px; font-size: 0.62rem; }
+
+        .progreso-ingesta { padding: 10px 14px 12px; }
+        .progreso-info { font-size: 0.62rem; gap: 8px; }
+
+        .masthead { padding: 22px 14px 14px; }
+        .lema { font-size: 0.86rem; margin-top: 6px; }
+        .doble-filete, .filete-bajo { padding: 0 14px; }
+
+        .filtros { padding: 12px 14px 14px; gap: 10px 14px; }
+        .campo { flex: 1 1 calc(50% - 7px); min-width: 0; }
+        .campo:has(#f-q) { flex: 1 1 100%; }
+        select, input[type=date], input[type=search] {
+            width: 100%; min-width: 0; font-size: 0.95rem; }
+        .contador { width: 100%; margin: 4px 0 0; text-align: center; }
+        .btn-limpiar { width: 100%; padding: 8px; border: 1px solid var(--filete-fuerte); }
+
+        main { padding: 18px 14px 30px; }
+        .grid { grid-template-columns: 1fr; gap: 16px; }
+        .pieza-img { height: 200px; }
+        .pieza-cuerpo { padding: 14px 16px 12px; }
+        .pieza-titulo { font-size: 1.1rem; }
+
+        .lector { padding: 0; }
+        .lector-pagina { padding: 22px 18px 30px; border: none;
+                         min-height: 100vh; max-width: 100%; }
+        .lector-cerrar { top: 10px; right: 10px; padding: 5px 10px;
+                         font-size: 0.62rem; }
+        .lector-titulo { font-size: 1.55rem; }
+        .lector-bajada { font-size: 1rem; }
+        .lector-datelinea { font-size: 0.66rem; gap: 4px 12px; }
+        .lector-cuerpo { font-size: 1rem; line-height: 1.7; }
+        .lector-cuerpo > p:first-of-type::first-letter {
+            font-size: 2.8em; }
+    }
+
+    /* ── Pantallas muy chicas (≤380 px) ── */
+    @media (max-width: 380px) {
+        .masthead h1 { font-size: 2rem; }
+        .campo { flex: 1 1 100%; }
+        .pieza-img { height: 170px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="cinta">
+    <span id="fecha-hoy"></span>
+    <div class="cinta-acciones">
+    {% if modo_publico %}
+        <a class="cinta-curador" href="{{ repo_url }}" target="_blank" rel="noopener">↗ Código en GitHub</a>
+    {% else %}
+        <span class="cinta-curador">Curador:
+            <a href="/curador/medios">Medios</a> ·
+            <a href="/curador/municipalidades">Municipios</a>
+        </span>
+        <span class="estado-ingesta" id="estado-ingesta"></span>
+        <button class="btn-actualizar" id="btn-actualizar">Actualizar edición</button>
+    {% endif %}
+    </div>
+</div>
+
+{% if not modo_publico %}
+<div class="progreso-ingesta" id="progreso-ingesta" hidden>
+    <div class="progreso-info">
+        <span class="progreso-fase" id="progreso-fase">Preparando ingesta…</span>
+        <span class="progreso-eta" id="progreso-eta"></span>
+    </div>
+    <div class="progreso-barra">
+        <div class="progreso-relleno indeterminado" id="progreso-relleno"></div>
+    </div>
+</div>
+{% endif %}
+
+<header class="masthead">
+    <h1><span class="articulo-el">El</span> Descentralizador</h1>
+    <p class="lema">by <b>roberttson</b> · noticias de todo Chile <span class="menos">(menos Santiago)</span></p>
+</header>
+<div class="doble-filete"></div>
+
+<nav class="filtros">
+    <div class="campo">
+        <label for="f-q">Buscar</label>
+        <input type="search" id="f-q" placeholder="Palabras clave…">
+    </div>
+    <div class="campo">
+        <label for="f-region">Región</label>
+        <select id="f-region"><option value="">Todas las regiones</option></select>
+    </div>
+    <div class="campo">
+        <label for="f-tipo">Fuente</label>
+        <select id="f-tipo">
+            <option value="">Todas las fuentes</option>
+            <option value="medios">Solo noticias</option>
+            <option value="municipalidades">Solo municipalidades</option>
+        </select>
+    </div>
+    <div class="campo">
+        <label for="f-medio">Medio</label>
+        <select id="f-medio"><option value="">Todos los medios</option></select>
+    </div>
+    <div class="campo">
+        <label for="f-fecha">Fecha</label>
+        <select id="f-fecha">
+            <option value="">Cualquier fecha</option>
+            <option value="hoy">Hoy</option>
+            <option value="semana">Esta semana</option>
+            <option value="30dias">Últimos 30 días</option>
+            <option value="custom">Personalizado…</option>
+        </select>
+    </div>
+    <div class="campo" id="campo-desde" style="display:none">
+        <label for="f-desde">Desde</label>
+        <input type="date" id="f-desde">
+    </div>
+    <div class="campo" id="campo-hasta" style="display:none">
+        <label for="f-hasta">Hasta</label>
+        <input type="date" id="f-hasta">
+    </div>
+    <button class="btn-limpiar" id="btn-limpiar">Limpiar</button>
+    <span class="contador" id="contador"></span>
+</nav>
+<div class="filete-bajo"></div>
+
+<main>
+    <div class="grid" id="grid"></div>
+    <div class="acciones">
+        <button class="btn-mas" id="btn-mas" style="display:none">Más noticias</button>
+    </div>
+</main>
+
+<!-- ── Lector integrado ── -->
+<div class="lector" id="lector" hidden>
+    <article class="lector-pagina">
+        <button class="lector-cerrar" id="lector-cerrar">✕ Cerrar</button>
+        <div class="lector-kicker" id="lector-kicker"></div>
+        <h1 class="lector-titulo" id="lector-titulo"></h1>
+        <p class="lector-bajada" id="lector-bajada"></p>
+        <div class="lector-datelinea" id="lector-datelinea"></div>
+        <hr class="lector-filete">
+        <figure class="lector-hero" id="lector-hero" hidden><img alt=""></figure>
+        <div class="lector-cuerpo" id="lector-cuerpo"></div>
+        <div class="lector-tambien" id="lector-tambien" hidden></div>
+        <div class="lector-cierre">❦</div>
+    </article>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let pagina = 1, cargando = false, medios = [];
+const piezas = new Map();   // id → artículo (para abrir el lector al instante)
+
+const MESES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const MESES_LARGOS = ["enero","febrero","marzo","abril","mayo","junio","julio",
+                      "agosto","septiembre","octubre","noviembre","diciembre"];
+
+function fmtFecha(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (isNaN(d)) return "";
+    return `${d.getDate()} ${MESES[d.getMonth()]} ${d.getFullYear()}`;
+}
+function fmtFechaLarga(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (isNaN(d)) return "";
+    return `${d.getDate()} de ${MESES_LARGOS[d.getMonth()]} de ${d.getFullYear()}`;
+}
+
+function escapar(s) {
+    const div = document.createElement("div");
+    div.textContent = s || "";
+    return div.innerHTML;
+}
+
+function truncarMedio(html, url, medio) {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    const parrafos = div.querySelectorAll("p");
+    if (parrafos.length <= 3) return html;
+    let sig = parrafos[2].nextSibling;
+    while (sig) { const next = sig.nextSibling; sig.remove(); sig = next; }
+    div.insertAdjacentHTML("beforeend",
+        `<div class="lector-nota" style="margin-top:1.4em">Continúa en el medio original. ` +
+        `<a href="${escapar(url)}" target="_blank" rel="noopener">Leer completo en ${escapar(medio)} ↗</a></div>`);
+    return div.innerHTML;
+}
+
+const esMuni = nombre => nombre.startsWith("Municipalidad de ");
+
+// Fecha del día en la cinta superior
+{
+    const hoy = new Date();
+    const dias = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+    $("fecha-hoy").textContent =
+        `${dias[hoy.getDay()]} ${hoy.getDate()} de ${MESES_LARGOS[hoy.getMonth()]} de ${hoy.getFullYear()} · Edición regional continua`;
+}
+
+async function cargarFiltros() {
+    const regionSel = $("f-region").value, medioSel = $("f-medio").value;
+    const r = await fetch("/api/filtros");
+    const data = await r.json();
+    medios = data.medios;
+    $("f-region").innerHTML = '<option value="">Todas las regiones</option>';
+    for (const reg of data.regiones) {
+        $("f-region").insertAdjacentHTML("beforeend",
+            `<option value="${escapar(reg)}">${escapar(reg)}</option>`);
+    }
+    $("f-region").value = regionSel;
+    poblarMedios($("f-region").value);
+    $("f-medio").value = medioSel;
+}
+
+function poblarMedios(region) {
+    const sel = $("f-medio"), tipo = $("f-tipo").value;
+    sel.innerHTML = '<option value="">Todos los medios</option>';
+    for (const m of medios) {
+        if (region && m.region !== region) continue;
+        if (tipo === "medios" && esMuni(m.medio)) continue;
+        if (tipo === "municipalidades" && !esMuni(m.medio)) continue;
+        sel.insertAdjacentHTML("beforeend",
+            `<option value="${escapar(m.medio)}">${escapar(m.medio)} (${m.n})</option>`);
+    }
+}
+
+// ── Filtros rápidos de fecha ──
+function isoLocal(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-` +
+           String(d.getDate()).padStart(2, "0");
+}
+
+function rangoFechas() {
+    const v = $("f-fecha").value, hoy = new Date();
+    if (v === "hoy") return { desde: isoLocal(hoy), hasta: "" };
+    if (v === "semana") {
+        const lunes = new Date(hoy);
+        lunes.setDate(hoy.getDate() - (hoy.getDay() + 6) % 7);
+        return { desde: isoLocal(lunes), hasta: "" };
+    }
+    if (v === "30dias") {
+        const d = new Date(hoy);
+        d.setDate(hoy.getDate() - 30);
+        return { desde: isoLocal(d), hasta: "" };
+    }
+    if (v === "custom") return { desde: $("f-desde").value, hasta: $("f-hasta").value };
+    return { desde: "", hasta: "" };
+}
+
+function tarjeta(a) {
+    const img = a.imagen
+        ? `<img class="pieza-img" src="${escapar(a.imagen)}" loading="lazy" alt=""
+               onerror="this.remove()">`
+        : "";
+    let tambien = "";
+    if (a.tambien_en.length) {
+        const links = a.tambien_en.map(o =>
+            `<a href="${escapar(o.url)}" target="_blank" rel="noopener">${escapar(o.medio)}</a>`
+        ).join(", ");
+        tambien = `<div class="tambien">↗ También en: ${links}</div>`;
+    }
+    const kicker = esMuni(a.medio)
+        ? `${escapar(a.region)} <span class="muni">· Municipal</span>`
+        : escapar(a.region);
+    return `<article class="pieza" data-id="${a.id}">
+        ${img}
+        <div class="pieza-cuerpo">
+            <div class="kicker">${kicker}</div>
+            <h2 class="pieza-titulo">${escapar(a.titulo)}</h2>
+            <p class="pieza-bajada">${escapar(a.resumen)}</p>
+            ${tambien}
+            <div class="pieza-pie">
+                <span class="pieza-medio">${escapar(a.medio)}</span>
+                <span class="pieza-fecha">${fmtFecha(a.fecha)}</span>
+            </div>
+            <a class="pieza-fuente" href="${escapar(a.url)}" target="_blank" rel="noopener">
+                ↗ Leer en ${escapar(a.medio)}
+            </a>
+        </div>
+    </article>`;
+}
+
+async function cargar(reiniciar = true) {
+    if (cargando) return;
+    cargando = true;
+    if (reiniciar) { pagina = 1; $("grid").innerHTML = ""; $("contador").textContent = ""; }
+
+    const fechas = rangoFechas();
+    const params = new URLSearchParams({
+        q: $("f-q").value, region: $("f-region").value, tipo: $("f-tipo").value,
+        medio: $("f-medio").value, desde: fechas.desde, hasta: fechas.hasta, pagina,
+    });
+    try {
+        const r = await fetch("/api/articulos?" + params);
+        const data = await r.json();
+        for (const a of data.articulos) piezas.set(a.id, a);
+        if (reiniciar && data.articulos.length === 0) {
+            $("grid").innerHTML = '<div class="vacio" style="grid-column:1/-1">' +
+                'No hay noticias que coincidan con los filtros.</div>';
+        } else {
+            $("grid").insertAdjacentHTML("beforeend", data.articulos.map(tarjeta).join(""));
+        }
+        $("btn-mas").style.display = data.hay_mas ? "" : "none";
+        const n = $("grid").querySelectorAll(".pieza").length;
+        if (n) $("contador").textContent = `${n} noticias en portada${data.hay_mas ? " +" : ""}`;
+    } catch (e) {
+        $("grid").innerHTML = '<div class="error-carga" style="grid-column:1/-1">' +
+            'Error al cargar. ¿Está corriendo el servidor?</div>';
+    }
+    cargando = false;
+}
+
+// ── Lector integrado ──
+let lecturaActual = 0;
+
+function abrirLector(id) {
+    const a = piezas.get(id);
+    if (!a) return;
+    lecturaActual = id;
+
+    $("lector-kicker").innerHTML = esMuni(a.medio)
+        ? `${escapar(a.region)} <span class="muni">· Municipal</span>`
+        : `${escapar(a.region)} · ${escapar(a.medio)}`;
+    $("lector-titulo").textContent = a.titulo;
+    $("lector-bajada").textContent = "";
+    $("lector-datelinea").innerHTML =
+        `<span>${escapar(a.medio)}</span><span>${fmtFechaLarga(a.fecha)}</span>` +
+        `<a href="${escapar(a.url)}" target="_blank" rel="noopener">Leer original ↗</a>`;
+
+    const hero = $("lector-hero");
+    if (a.imagen) {
+        hero.hidden = false;
+        const img = hero.querySelector("img");
+        img.src = a.imagen;
+        img.onerror = () => { hero.hidden = true; };
+    } else {
+        hero.hidden = true;
+    }
+
+    $("lector-cuerpo").innerHTML =
+        '<div class="lector-cargando">Recuperando la edición completa…</div>';
+    $("lector-tambien").hidden = true;
+
+    $("lector").hidden = false;
+    $("lector").scrollTop = 0;
+    document.body.classList.add("leyendo");
+
+    fetch(`/api/articulo/${id}`).then(r => r.json()).then(art => {
+        if (lecturaActual !== id || $("lector").hidden) return;
+        if (art.contenido) {
+            $("lector-bajada").textContent = "";
+            $("lector-cuerpo").innerHTML = esMuni(art.medio)
+                ? art.contenido
+                : truncarMedio(art.contenido, art.url, art.medio);
+        } else {
+            $("lector-bajada").textContent = "";
+            $("lector-cuerpo").innerHTML =
+                `<div class="lector-nota">No se pudo recuperar el cuerpo completo de esta
+                 noticia — el extracto va a continuación.
+                 <a href="${escapar(art.url)}" target="_blank" rel="noopener">
+                 Léela completa en ${escapar(art.medio)} ↗</a></div>` +
+                `<p>${escapar(art.resumen)}</p>`;
+        }
+        if (art.tambien_en && art.tambien_en.length) {
+            const links = art.tambien_en.map(o =>
+                `<a href="${escapar(o.url)}" target="_blank" rel="noopener">${escapar(o.medio)}</a>`
+            ).join(" · ");
+            $("lector-tambien").innerHTML = `↗ Esta noticia también fue cubierta por: ${links}`;
+            $("lector-tambien").hidden = false;
+        }
+    }).catch(() => {
+        if (lecturaActual !== id) return;
+        $("lector-cuerpo").innerHTML =
+            '<div class="lector-nota">No se pudo contactar al servidor.</div>';
+    });
+}
+
+function cerrarLector() {
+    $("lector").hidden = true;
+    document.body.classList.remove("leyendo");
+}
+
+$("grid").addEventListener("click", e => {
+    if (e.target.closest("a")) return;          // links "también en" siguen su curso
+    const card = e.target.closest(".pieza");
+    if (card) abrirLector(+card.dataset.id);
+});
+$("lector-cerrar").addEventListener("click", cerrarLector);
+$("lector").addEventListener("mousedown", e => {
+    if (e.target === $("lector")) cerrarLector();
+});
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !$("lector").hidden) cerrarLector();
+});
+
+// ── Eventos de filtros ──
+$("f-region").addEventListener("change", () => {
+    poblarMedios($("f-region").value);
+    cargar();
+});
+$("f-tipo").addEventListener("change", () => {
+    poblarMedios($("f-region").value);
+    $("f-medio").value = "";
+    cargar();
+});
+$("f-medio").addEventListener("change", () => cargar());
+$("f-fecha").addEventListener("change", () => {
+    const custom = $("f-fecha").value === "custom";
+    $("campo-desde").style.display = custom ? "" : "none";
+    $("campo-hasta").style.display = custom ? "" : "none";
+    cargar();
+});
+$("f-desde").addEventListener("change", () => cargar());
+$("f-hasta").addEventListener("change", () => cargar());
+let timerBusqueda;
+$("f-q").addEventListener("input", () => {
+    clearTimeout(timerBusqueda);
+    timerBusqueda = setTimeout(() => cargar(), 350);
+});
+$("btn-limpiar").addEventListener("click", () => {
+    for (const id of ["f-q", "f-region", "f-tipo", "f-medio", "f-fecha",
+                      "f-desde", "f-hasta"]) $(id).value = "";
+    $("campo-desde").style.display = "none";
+    $("campo-hasta").style.display = "none";
+    poblarMedios("");
+    cargar();
+});
+$("btn-mas").addEventListener("click", () => { pagina++; cargar(false); });
+
+{% if not modo_publico %}
+// ── Actualización de noticias desde la interfaz ──
+const btnAct = $("btn-actualizar"), estadoIng = $("estado-ingesta");
+const panelProg = $("progreso-ingesta"), relleno = $("progreso-relleno"),
+      faseEl = $("progreso-fase"), etaEl = $("progreso-eta");
+
+const NOMBRES_FASE = {
+    iniciando: "Preparando ingesta",
+    feeds: "Descargando feeds",
+    imagenes: "Rescatando imágenes",
+    dedup: "Deduplicando noticias",
+};
+
+function fmtETA(s) {
+    if (s < 60) return `~${Math.round(s)} s restantes`;
+    const m = Math.floor(s / 60), seg = Math.round(s % 60);
+    return `~${m} min ${String(seg).padStart(2, "0")} s restantes`;
+}
+
+function pintarProgreso(p) {
+    if (!p) return;
+    const fase = NOMBRES_FASE[p.fase] || p.fase;
+    if (p.total > 0) {
+        faseEl.textContent = `${fase} · ${p.hechos}/${p.total}`;
+        const pct = Math.min(100, (p.hechos / p.total) * 100);
+        relleno.classList.remove("indeterminado");
+        relleno.style.width = `${pct}%`;
+        if (p.hechos > 0 && p.inicio) {
+            const elapsed = Date.now() / 1000 - p.inicio;
+            const eta = elapsed * (p.total - p.hechos) / p.hechos;
+            etaEl.textContent = eta > 0.5 ? fmtETA(eta) : "Cerrando…";
+        } else {
+            etaEl.textContent = "";
+        }
+    } else {
+        faseEl.textContent = fase + "…";
+        relleno.classList.add("indeterminado");
+        relleno.style.width = "";
+        etaEl.textContent = "";
+    }
+}
+
+function modoActualizando(activo) {
+    btnAct.disabled = activo;
+    btnAct.textContent = activo ? "Imprimiendo…" : "Actualizar edición";
+    panelProg.hidden = !activo;
+    if (!activo) {
+        relleno.style.width = "0";
+        relleno.classList.add("indeterminado");
+        etaEl.textContent = "";
+    }
+}
+
+async function vigilarIngesta() {
+    modoActualizando(true);
+    estadoIng.textContent = "";
+    estadoIng.classList.remove("error");
+    while (true) {
+        await new Promise(res => setTimeout(res, 1000));
+        let est;
+        try {
+            est = await (await fetch("/api/actualizar/estado")).json();
+        } catch { continue; }
+        if (est.corriendo) {
+            pintarProgreso(est.progreso);
+            continue;
+        }
+        modoActualizando(false);
+        if (est.error) {
+            estadoIng.textContent = "✗ Error: " + est.error;
+            estadoIng.classList.add("error");
+        } else if (est.resultado) {
+            const r = est.resultado;
+            estadoIng.textContent = `✓ ${r.nuevas} noticias nuevas` +
+                (r.fallidos.length ? ` · ${r.fallidos.length} feeds con error` : "");
+            await cargarFiltros();
+            cargar();
+        }
+        return;
+    }
+}
+
+btnAct.addEventListener("click", async () => {
+    try {
+        await fetch("/api/actualizar", { method: "POST" });
+    } catch {
+        estadoIng.textContent = "✗ No se pudo iniciar la actualización";
+        estadoIng.classList.add("error");
+        return;
+    }
+    vigilarIngesta();
+});
+
+// Si hay una ingesta en curso al abrir la página, retomar el seguimiento
+fetch("/api/actualizar/estado").then(r => r.json())
+    .then(est => { if (est.corriendo) vigilarIngesta(); })
+    .catch(() => {});
+{% endif %}
+
+cargarFiltros().then(() => cargar());
+</script>
+</body>
+</html>
