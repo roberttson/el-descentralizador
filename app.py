@@ -12,6 +12,7 @@ Uso:
 import csv
 import os
 import re
+import sys
 import threading
 
 import feedparser
@@ -386,4 +387,20 @@ def curador_reset():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    import logging
+    import colores as c
+    # Silenciar el banner ruidoso de Werkzeug
+    logging.getLogger("werkzeug").setLevel(logging.WARNING)
+    cli = sys.modules.get("flask.cli")
+    if cli:
+        cli.show_server_banner = lambda *a, **k: None
+
+    c.cabecera("EL DESCENTRALIZADOR", "noticias de todo Chile (menos Santiago)")
+    modo = c.err("PÚBLICO") if MODO_PUBLICO else c.ok("desarrollo (curador visible)")
+    print(f"  {c.tenue('Modo:')}      {modo}")
+    print(f"  {c.tenue('Sirviendo:')} {c.info('http://localhost:5000')}")
+    if not MODO_PUBLICO:
+        print(f"  {c.tenue('Curador:')}   {c.info('http://localhost:5000/curador/medios')}")
+    print(f"  {c.tenue('Detener:')}   Ctrl+C")
+    print()
+    app.run(debug=False, port=5000)

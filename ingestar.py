@@ -31,6 +31,7 @@ from dateutil import parser as dateparser
 
 from basedatos import conectar
 from scrapers import scrapear, tiene_scraper
+import colores as c
 
 # La consola de Windows usa cp1252 por defecto y no soporta ✓/✗
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -271,7 +272,7 @@ def rescatar_imagenes(con, workers=12, progreso=None):
         "SELECT id, url FROM articulos WHERE imagen IS NULL").fetchall()
     if not pendientes:
         return 0
-    print(f"Rescatando imágenes de {len(pendientes)} artículos sin foto (og:image)...")
+    c.fase(f"Rescatando imágenes (og:image) de {len(pendientes)} notas sin foto")
     if progreso is not None:
         progreso.update(fase="imagenes", hechos=0,
                         total=len(pendientes), inicio=time.time())
@@ -288,7 +289,7 @@ def rescatar_imagenes(con, workers=12, progreso=None):
             if progreso is not None:
                 progreso["hechos"] = i
     con.commit()
-    print(f"→ Imágenes rescatadas: {rescatadas}/{len(pendientes)}\n")
+    print(f"  {c.claro(str(rescatadas))} {c.tenue(f'rescatadas de {len(pendientes)}')}")
     return rescatadas
 
 
@@ -357,7 +358,8 @@ def deduplicar(con):
 
 def ingestar(workers=12, progreso=None):
     medios = cargar_medios()
-    print(f"Ingestando {len(medios)} medios con RSS activo...\n")
+    c.cabecera("EL DESCENTRALIZADOR · Ingesta",
+               f"{len(medios)} fuentes en cola · {workers} obreros en paralelo")
     if progreso is not None:
         progreso.update(fase="feeds", hechos=0,
                         total=len(medios), inicio=time.time())
@@ -365,7 +367,9 @@ def ingestar(workers=12, progreso=None):
     con = conectar()
     total_nuevos = 0
     fallidos = []
+    ancho_n = len(str(len(medios)))
 
+    c.fase("Descargando feeds")
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {executor.submit(procesar_feed, m): m for m in medios}
         for i, future in enumerate(as_completed(futures), 1):
@@ -382,39 +386,59 @@ def ingestar(workers=12, progreso=None):
                 nuevos += cur.rowcount
             con.commit()
             total_nuevos += nuevos
-            marca = "✓" if estado == "ok" else "✗"
-            detalle = f"{nuevos} nuevas de {len(articulos)}" if estado == "ok" else estado
-            print(f"[{i:>2}/{len(medios)}] {marca} {nombre} ({region}): {detalle}")
-            if estado != "ok":
+
+            if estado == "ok":
+                marca = c.ok("✓")
+                if nuevos:
+                    detalle = f"{c.claro(str(nuevos))} {c.tenue(f'nuevas de {len(articulos)}')}"
+                else:
+                    detalle = c.tenue(f"sin novedades ({len(articulos)} en el feed)")
+            else:
+                marca = c.err("✗")
+                detalle = c.err(estado)
                 fallidos.append(nombre)
+
+            contador = c.tenue(f"[{i:>{ancho_n}}/{len(medios)}]")
+            print(f"  {contador} {marca} {nombre} {c.tenue('·')} {c.tenue(region)}  {detalle}")
             if progreso is not None:
                 progreso["hechos"] = i
 
-    print()
     rescatar_imagenes(con, workers=workers, progreso=progreso)
 
-    print("Deduplicando noticias repetidas entre medios...")
+    c.fase("Deduplicando noticias entre medios")
     if progreso is not None:
         progreso.update(fase="dedup", hechos=0, total=0, inicio=time.time())
     duplicados = deduplicar(con)
+    print(f"  {c.claro(str(duplicados))} {c.tenue('duplicados agrupados')}")
 
     total = con.execute("SELECT COUNT(*) FROM articulos").fetchone()[0]
     grupos = con.execute("SELECT COUNT(DISTINCT grupo_id) FROM articulos").fetchone()[0]
     con.close()
 
-    print(f"""
-┌──────────────────────────────────────┐
-│            RESUMEN INGESTA           │
-├──────────────────────────────────────┤
-│ Noticias nuevas:          {total_nuevos:>6}     │
-│ Duplicados detectados:    {duplicados:>6}     │
-│ Total en base de datos:   {total:>6}     │
-│ Noticias únicas (grupos): {grupos:>6}     │
-│ Feeds con error:          {len(fallidos):>6}     │
-└──────────────────────────────────────┘""")
+    print()
+    print(c.filete("═"))
+    print(f"  {c.AMARILLO}{c.BOLD}RESUMEN DE LA EDICIÓN{c.RESET}")
+    print(c.filete("─", c.TENUE))
+    def linea(etiq, val, color=c.AMARILLO):
+        print(f"  {c.tenue(etiq.ljust(28))} {color}{c.BOLD}{val:>6}{c.RESET}")
+    linea("Noticias nuevas",        total_nuevos, c.AMARILLO)
+    linea("Duplicados agrupados",   duplicados,   c.CYAN)
+    linea("Total en base de datos", total,        c.BLANCO)
+    linea("Grupos únicos",          grupos,       c.BLANCO)
+    linea("Feeds con error",        len(fallidos),
+          c.ROJO if fallidos else c.VERDE)
+    print(c.filete("═"))
+
     if fallidos:
-        print("Feeds con error:", ", ".join(fallidos))
-    print("\nPara ver la interfaz:  python app.py  →  http://localhost:5000")
+        print()
+        print(c.err(f"  Feeds con error ({len(fallidos)}):"))
+        for nombre in fallidos:
+            print(f"    {c.err('·')} {c.tenue(nombre)}")
+
+    print()
+    print(f"  {c.tenue('Para abrir la interfaz:')} "
+          f"{c.info('python app.py')} {c.tenue('→')} {c.info('http://localhost:5000')}")
+    print()
 
     return {
         "nuevas": total_nuevos,
