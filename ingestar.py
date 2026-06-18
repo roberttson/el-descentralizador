@@ -22,6 +22,8 @@ from datetime import datetime, timedelta, timezone
 import warnings
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 import feedparser
 from bs4 import BeautifulSoup, XMLParsedAsHTMLWarning
 
@@ -42,6 +44,32 @@ CSV_MEDIOS = "medios_rss_actualizado.csv"
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                          "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"}
 TIMEOUT = 30   # algunos sitios regionales (Diario Los Lagos) tardan >15 s
+
+
+def crear_sesion():
+    """Session de requests con reintentos para errores transitorios.
+
+    Reintenta hasta 2 veces (3 intentos en total) con espera 1s, 2s entre
+    cada uno. Cubre timeouts, errores de conexión y los códigos 5xx más
+    comunes. Los 4xx (404 etc.) NO se reintentan: la URL está mala o el
+    feed se cayó del todo.
+    """
+    retry = Retry(
+        total=2, connect=2, read=2,
+        backoff_factor=1.0,
+        status_forcelist=[408, 429, 500, 502, 503, 504, 520, 522, 524],
+        allowed_methods=["HEAD", "GET"],
+        raise_on_status=False,
+    )
+    adapter = HTTPAdapter(max_retries=retry, pool_maxsize=20)
+    s = requests.Session()
+    s.headers.update(HEADERS)
+    s.mount("http://", adapter)
+    s.mount("https://", adapter)
+    return s
+
+
+SESION = crear_sesion()
 MAX_RESUMEN = 700          # caracteres del resumen limpio
 UMBRAL_RESUMEN_VACIO = 80  # bajo esto se considera "feed pelado" y se rescata
 VENTANA_DUP_DIAS = 3       # ventana temporal para buscar duplicados
@@ -206,7 +234,7 @@ def procesar_feed(medio):
     if not feed_url:
         return procesar_scraper(medio)
     try:
-        r = requests.get(feed_url, timeout=TIMEOUT, headers=HEADERS)
+        r = SESION.get(feed_url, timeout=TIMEOUT)
         r.raise_for_status()
         feed = feedparser.parse(r.content)
     except Exception as e:
@@ -253,7 +281,7 @@ def procesar_feed(medio):
 def buscar_og_image(url):
     """Visita la página del artículo y extrae la imagen principal (og:image)."""
     try:
-        r = requests.get(url, timeout=10, headers=HEADERS, stream=True)
+        r = SESION.get(url, timeout=10, stream=True)
         # Las metaetiquetas están en el <head>: basta el inicio del HTML
         html = next(r.iter_content(chunk_size=120_000, decode_unicode=False), b"")
         r.close()
@@ -277,6 +305,7 @@ def rescatar_imagenes(con, workers=12, progreso=None):
         progreso.update(fase="imagenes", hechos=0,
                         total=len(pendientes), inicio=time.time())
     rescatadas = 0
+    ancho_n = len(str(len(pendientes)))
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {executor.submit(buscar_og_image, p["url"]): p["id"]
                    for p in pendientes}
@@ -288,9 +317,24 @@ def rescatar_imagenes(con, workers=12, progreso=None):
                 rescatadas += 1
             if progreso is not None:
                 progreso["hechos"] = i
+            # Barra inline: se reescribe en la misma línea
+            barra = _barra_progreso(i, len(pendientes))
+            print(f"\r  {c.tenue(f'[{i:>{ancho_n}}/{len(pendientes)}]')} "
+                  f"{barra}  {c.claro(str(rescatadas))} "
+                  f"{c.tenue('rescatadas')}", end="", flush=True)
+    print()  # salto de línea tras la barra
     con.commit()
-    print(f"  {c.claro(str(rescatadas))} {c.tenue(f'rescatadas de {len(pendientes)}')}")
     return rescatadas
+
+
+def _barra_progreso(hechos, total, ancho=24):
+    """Barra estilo [████████░░░░░░░░] con porcentaje."""
+    if total <= 0:
+        return ""
+    pct = hechos / total
+    llenos = int(ancho * pct)
+    barra = "█" * llenos + "░" * (ancho - llenos)
+    return f"{c.ROJO}{barra}{c.RESET} {c.tenue(f'{int(pct*100):>3}%')}"
 
 
 # ─────────────────────────────────────────────

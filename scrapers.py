@@ -97,8 +97,9 @@ def scrapear_mercurio(sitio_url):
     artículo (uno en la imagen, otro en el título), preferimos el que
     tenga texto.
     """
+    from ingestar import SESION  # import diferido para evitar ciclo
     try:
-        r = requests.get(sitio_url, headers=UA, timeout=TIMEOUT)
+        r = SESION.get(sitio_url, timeout=TIMEOUT)
         r.raise_for_status()
     except requests.RequestException:
         return []
